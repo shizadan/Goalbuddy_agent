@@ -3,7 +3,6 @@ from twilio.rest import Client
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import os
-import json
 
 app = Flask(__name__)
 
@@ -15,10 +14,9 @@ MY_WHATSAPP = os.environ.get("MY_WHATSAPP")
 
 client = Client(TWILIO_SID, TWILIO_AUTH)
 
-# Google Sheets setup (load from env var)
+# Google Sheets setup
 scope = ["https://spreadsheets.google.com/feeds","https://www.googleapis.com/auth/drive"]
-creds_dict = json.loads(os.environ.get("GOOGLE_CREDS"))
-creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
+creds = ServiceAccountCredentials.from_json_keyfile_name("goalbuddy-agent.json", scope)
 gc = gspread.authorize(creds)
 sheet = gc.open("Goal_tracking_auto_summary").sheet1
 
