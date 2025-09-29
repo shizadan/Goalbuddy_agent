@@ -14,9 +14,13 @@ MY_WHATSAPP = os.environ.get("MY_WHATSAPP")
 
 client = Client(TWILIO_SID, TWILIO_AUTH)
 
-# Google Sheets setup
-scope = ["https://spreadsheets.google.com/feeds","https://www.googleapis.com/auth/drive"]
-creds = ServiceAccountCredentials.from_json_keyfile_name("goalbuddy-agent.json", scope)
+# Google Sheets setup (load from env var)
+scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+
+import json
+creds_dict = json.loads(os.environ.get("GOOGLE_CREDS"))
+creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
+
 gc = gspread.authorize(creds)
 sheet = gc.open("Goal_tracking_auto_summary").sheet1
 
